@@ -3,58 +3,71 @@ package com.vli.main;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-public class GameLoop extends Thread {
+public class GameLoop extends Thread implements HaveFPS{
 	
-	private boolean running;
-	private boolean paused;
-	
+	private HaveGameBahavior game;
 	private SurfaceHolder holder;
-	private GameCore game;
-	
 	private final Object mRunLock;
 	
-	public GameLoop(GameCore game){
+	private int targetFPS;
+	private boolean running;
+	private boolean paused;
+	private double currentTime;
+	private double lastUpdate;
+	private double diff;
+	
+	public GameLoop(GameCore gameCore){
+		this.game = gameCore;
+		this.holder = gameCore.getSurfaceHolder();
+		this.setFPS(30);
 		this.running = false;
-		this.paused = true;
+		this.paused = false;
 		this.mRunLock = new Object();
-		this.game = game;
 	}
 	
-	public void setViewAndHolder(GameView v){
-		this.holder = v.getSurfaceHolder();
-	}
-
 	public void run(){
 		while(running){
-			Canvas c = null;
-			try{
-				c = holder.lockCanvas(null);
-				synchronized (holder) {
-					if(!paused){
-						
-						
-					}
-					synchronized (mRunLock) {
-						if(!paused){
-							
-							this.game.render();
-						}
-					}
-				}
-			}finally{
-				if(c != null){
-					holder.unlockCanvasAndPost(c);
+			this.currentTime = System.nanoTime();
+			if(!paused){
+				while(currentTime - lastUpdate > diff){
+					this.renderProcesse();
+					this.lastUpdate = this.currentTime;
 				}
 			}
 		}
 	}
 	
-	public void setRunning(boolean b){
-		this.running = b;
+	private void renderProcesse(){
+		Canvas c = null;
+		try {
+			c = holder.lockCanvas(null);
+			synchronized (holder) {
+				this.game.updateGameDate();
+			}
+			synchronized (mRunLock) {
+				this.game.renderGame(c);
+			}
+		}finally{
+			if(c != null){
+				holder.unlockCanvasAndPost(c);
+			}
+		}
 	}
 	
-	public void setPaused(boolean b){
-		this.paused = b;
+	@Override
+	public void setFPS(int fps) {
+		this.targetFPS = fps;
+		this.diff = 1000000000/this.targetFPS;
 	}
-	
+
+	@Override
+	public void setGameLoopStarted(boolean state) {
+		this.running = state;
+	}
+
+	@Override
+	public void setGameLoopPaused(boolean state) {
+		this.paused = state;
+	}
+
 }
