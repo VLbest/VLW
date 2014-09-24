@@ -3,7 +3,7 @@ package com.vli.main;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.vli.game.GameManager;
+import com.vli.gamefield.GameManager;
 import com.vli.utils.LOG;
 
 import android.graphics.Canvas;
