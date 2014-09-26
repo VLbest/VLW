@@ -1,5 +1,7 @@
 package com.vli.main;
 
+import com.vli.utils.LOG;
+
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
@@ -19,7 +21,7 @@ public class GameLoop extends Thread implements HaveFPS{
 	public GameLoop(GameCore gameCore){
 		this.game = gameCore;
 		this.holder = gameCore.getSurfaceHolder();
-		this.setFPS(30);
+		this.setFPS(5);
 		this.running = false;
 		this.paused = false;
 		this.mRunLock = new Object();
@@ -27,11 +29,22 @@ public class GameLoop extends Thread implements HaveFPS{
 	
 	public void run(){
 		while(running){
-			this.currentTime = System.nanoTime();
-			if(!paused){
-				while(currentTime - lastUpdate > diff){
-					this.renderProcesse();
-					this.lastUpdate = this.currentTime;
+			Canvas c = null;
+			try{
+				c = holder.lockCanvas(null);
+				synchronized (holder) {
+					if(!paused){
+						
+					}
+					synchronized (mRunLock) {
+						if(!paused){
+							this.game.renderGame(c);
+						}
+					}
+				}
+			}finally{
+				if(c != null){
+					holder.unlockCanvasAndPost(c);
 				}
 			}
 		}
@@ -42,7 +55,7 @@ public class GameLoop extends Thread implements HaveFPS{
 		try {
 			c = holder.lockCanvas(null);
 			synchronized (holder) {
-				this.game.updateGameDate();
+				
 			}
 			synchronized (mRunLock) {
 				this.game.renderGame(c);

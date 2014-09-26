@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+
 public class GameSurface extends SurfaceView implements HaveGameView, SurfaceHolder.Callback{
 	
 	private SurfaceHolder holder;
@@ -57,8 +58,8 @@ public class GameSurface extends SurfaceView implements HaveGameView, SurfaceHol
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		this.game.undateEvent(event);
-		return super.onTouchEvent(event);
+		this.game.updateGameDate(event);
+		return true;
 	}
 
 }

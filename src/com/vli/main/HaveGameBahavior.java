@@ -8,14 +8,12 @@ public interface HaveGameBahavior {
 
 	public SurfaceHolder getSurfaceHolder();
 
-	public void updateGameDate();
+	public void updateGameDate(MotionEvent event);
 
 	public void renderGame(Canvas c);
 
 	public void stopGame();
 
 	void startGame();
-
-	public void undateEvent(MotionEvent event);
 	
 }

@@ -14,14 +14,11 @@ public class GameCore implements HaveGameBahavior{
 	
 	private HaveGameView gameView;
 	private GameLoop gameLoop;
-	private HaveGameManager gameManager;
-	private HaveActionListennerBehavior action;
-	private List<GameSpriteBenavior> gameObjects;
+	private HaveGameManager game;
+	private static List<GameSpriteBenavior> gameObjects;
 	
 	public GameCore(){
 		this.gameObjects = new LinkedList<GameSpriteBenavior>();
-		this.action = new ActionListenner();
-		this.gameManager = new GameManager(action);
 	}
 	
 	public void setUpView(HaveGameView gameView){
@@ -34,17 +31,19 @@ public class GameCore implements HaveGameBahavior{
 	}
 
 	@Override
-	public void updateGameDate() {
-		LOG.showInfoLog("updating");
-		
+	public void updateGameDate(MotionEvent event) {
+		this.game.getTileListenner().setNewTouch(event);
+	}
+	
+	public static void addObjectsToRender(GameSpriteBenavior sprite){
+		gameObjects.add(sprite);
 	}
 
 	@Override
 	public void renderGame(Canvas c) {
-		LOG.showInfoLog("rendering");
 		c.save();
 		for(GameSpriteBenavior sprite : this.gameObjects){
-			sprite.draw();
+			sprite.draw(c);
 		}
 		c.restore();
 	}
@@ -57,7 +56,6 @@ public class GameCore implements HaveGameBahavior{
 		}
 		this.gameLoop.setGameLoopStarted(true);
 		this.gameLoop.start();
-		this.gameManager.startGame();
 	}
 
 	@Override
@@ -74,9 +72,9 @@ public class GameCore implements HaveGameBahavior{
 		}
 	}
 
-	@Override
-	public void undateEvent(MotionEvent event) {
-		this.action.setNewEvent(event);
+	public void setGameManager(HaveGameManager gameManager) {
+		this.game = gameManager;
+		
 	}
 
 }
