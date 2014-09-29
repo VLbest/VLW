@@ -46,6 +46,7 @@ public class TileListenner {
 			this.updatePoint(event);
 			this.findSide();
 			if(this.currentAxe.toString() != Axes.NONE.toString()){
+				LOG.showInfoLog("ACTION");
 				this.game.setCellsInAction(this.currentAxe, this.side, this.curr_x_point, this.curr_y_point);
 			}
 		}

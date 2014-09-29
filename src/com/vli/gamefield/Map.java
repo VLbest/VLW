@@ -1,5 +1,6 @@
 package com.vli.gamefield;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.vli.utils.LOG;
@@ -22,13 +23,19 @@ public class Map {
 	
 	public List<Cell> getCellsAround(int curr_x_point, int curr_y_point, Axes currentAxe){
 		int nb;
+		List<Cell> cellsToReturn = new LinkedList<Cell>();
 		if(currentAxe.equals(Axes.HORISONT)){
 			nb = this.getLineNb(curr_y_point);
-			// Вернуть ячейки в линии с номером nb-1
+			for(int i = 0; i < 8; i++){
+				cellsToReturn.add((Cell) cells[nb-1][i]);
+			}
 		}else {
 			nb = this.getRowNb(curr_x_point);
+			for(int i = 0; i < 10; i++){
+				cellsToReturn.add((Cell) cells[i][nb-1]);
+			}
 		}
-		return null;
+		return cellsToReturn;
 	}
 
 	private int getRowNb(int point) {

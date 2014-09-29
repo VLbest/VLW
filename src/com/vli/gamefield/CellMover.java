@@ -3,6 +3,7 @@ package com.vli.gamefield;
 import java.util.List;
 
 import com.vli.main.GameSpriteBenavior;
+import com.vli.utils.LOG;
 
 import android.graphics.Path.Direction;
 import android.graphics.Rect;
@@ -15,6 +16,7 @@ public class CellMover implements CellMoverBehavior{
 
 	@Override
 	public void moveCells(List<Cell> cells, MoveDirection side, Axes axe) {
+		LOG.showInfoLog("MOVE");
 		int offset = 3;
 		for(Cell cell: cells){
 			switch (side) {
