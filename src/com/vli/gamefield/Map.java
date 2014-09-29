@@ -27,24 +27,38 @@ public class Map {
 		if(currentAxe.equals(Axes.HORISONT)){
 			nb = this.getLineNb(curr_y_point);
 			for(int i = 0; i < 8; i++){
-				cellsToReturn.add((Cell) cells[nb-1][i]);
+				try {
+					cellsToReturn.add((Cell) cells[nb-1][i]);
+				} catch (Exception e) {
+					e.printStackTrace();
+					LOG.showInfoLog("horisont");
+					LOG.showInfoLog(nb-1);
+					LOG.showInfoLog(i);
+				}				
 			}
 		}else {
 			nb = this.getRowNb(curr_x_point);
 			for(int i = 0; i < 10; i++){
-				cellsToReturn.add((Cell) cells[i][nb-1]);
+				try {
+					cellsToReturn.add((Cell) cells[i][nb-1]);
+				} catch (Exception e) {
+					e.printStackTrace();
+					LOG.showInfoLog("vertic");
+					LOG.showInfoLog(i);
+					LOG.showInfoLog(nb-1);
+				}
 			}
 		}
 		return cellsToReturn;
 	}
 
 	private int getRowNb(int point) {
-		for(int i = 0; i < cells.length; i++){
+		for(int i = 0; i < 10; i++){
 			try {
-				Cell c = (Cell) cells[0][i];
-				int top = c.getBounds().top;
-				int bot = c.getBounds().bottom;
-				if(point < bot && point > top){
+				Cell c = (Cell) cells[1][i];
+				int left = c.getBounds().left;
+				int right = c.getBounds().right;
+				if(point > left && point < right){
 					return c.getRowNb();
 				}
 			} catch (Exception e) {
@@ -55,7 +69,7 @@ public class Map {
 	}
 
 	private int getLineNb(int point) {
-		for(int i = 0; i < cells.length; i++){
+		for(int i = 0; i < 8; i++){
 			try {
 				Cell c = (Cell) cells[i][0];
 				int top = c.getBounds().top;

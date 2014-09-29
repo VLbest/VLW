@@ -39,6 +39,7 @@ public class GameLoop extends Thread implements HaveFPS{
 					synchronized (mRunLock) {
 						if(!paused){
 							this.game.renderGame(c);
+							
 						}
 					}
 				}

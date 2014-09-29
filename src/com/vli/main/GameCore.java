@@ -7,6 +7,7 @@ import com.vli.gamefield.GameManager;
 import com.vli.utils.LOG;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
@@ -42,6 +43,7 @@ public class GameCore implements HaveGameBahavior{
 	@Override
 	public void renderGame(Canvas c) {
 		c.save();
+		c.drawColor(Color.DKGRAY);
 		for(GameSpriteBenavior sprite : this.gameObjects){
 			sprite.draw(c);
 		}
