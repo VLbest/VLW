@@ -26,8 +26,8 @@ public class ClassicMapCreator extends MapFactory{
 		for(int y = 0; y < nbOfLines; y++){
 			for(int x = 0; x < nbOfRows; x++){
 				Cell c = new Cell();
-				c.setLineNb(y+1);
-				c.setRowNb(x+1);
+				c.setLineNb(y);
+				c.setRowNb(x);
 				c.setBounds(left, top, left + size, top + size);
 				
 				map.addCell(x, y, c);

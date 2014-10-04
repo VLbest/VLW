@@ -7,6 +7,7 @@ import com.vli.main.GameCore;
 import com.vli.main.HaveGameManager;
 import com.vli.mapfactory.ClassicMapCreator;
 import com.vli.mapfactory.MapFactory;
+import com.vli.utils.LOG;
 
 public class GameManager implements HaveGameManager{
 	
@@ -43,6 +44,7 @@ public class GameManager implements HaveGameManager{
 
 	@Override
 	public void setCellsInAction(Axes currentAxe, MoveDirection side, int curr_x_point, int curr_y_point) {
+		LOG.showInfoLog("Prepare to move the tiles");
 		List<Cell> cells;
 		cells = this.gameMap.getCellsAround(curr_x_point,curr_y_point, currentAxe);
 		this.cellMover.moveCells(cells, side, currentAxe);

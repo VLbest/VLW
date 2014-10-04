@@ -20,61 +20,115 @@ public class TileListenner {
 	private MoveDirection side;
 	private Axes currentAxe;
 
+	private boolean isAxeLocked;
+
 	public TileListenner(HaveGameManager gameManager) {
 		this.game = gameManager;
-		this.isListen = false;
+		this.resetPoints();
+		this.setListen(false);
+		this.lockAxe(false);
+		this.currentAxe = Axes.NONE;
+		this.side = MoveDirection.NONE;
+	}
 
+	private void resetPoints() {
+		this.curr_x_point = -1;
+		this.curr_y_point = -1;
+		this.last_x_point = -1;
+		this.last_y_point = -1;
 	}
 
 	public void setNewTouch(MotionEvent event) {
 		int action = event.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
-			this.findPoint(event);
+			LOG.showInfoLog("Toching is detected : .ACTION_DOWN");
 			this.setListen(true);
 			break;
 		case MotionEvent.ACTION_UP:
-			this.setListen(false);
-			this.currentAxe = Axes.NONE;
+			LOG.showInfoLog("Toching is ended : .ACTION_UP");
+			setListen(false);
+			this.resetPoints();
 			break;
-
-
 		default:
 			break;
 		}
-		if(this.isListen){
+		if(this.curr_x_point > 0 && this.curr_y_point > 0){
 			this.updatePoint(event);
-			this.findSide();
-			if(this.currentAxe.toString() != Axes.NONE.toString()){
-				this.game.setCellsInAction(this.currentAxe, this.side, this.curr_x_point, this.curr_y_point);
-			}
 		}
-	
+		this.findPoint(event);
+		this.alalyseTouch();
 	}
 
-	private void findSide() {
-		if(last_x_point > curr_x_point){
-			this.side = MoveDirection.LEFT;
-			this.currentAxe = Axes.HORISONT;
-		}else if(last_x_point < curr_x_point){
-			this.side = MoveDirection.RIGHT;
-			this.currentAxe = Axes.HORISONT;
-		}else if(last_y_point > curr_y_point){
-			this.side = MoveDirection.UP;
-			this.currentAxe = Axes.VERTICAL;
-		}else if(last_y_point < curr_y_point){
-			this.side = MoveDirection.DOWN;
-			this.currentAxe = Axes.VERTICAL;
-		}else {
-			this.side = MoveDirection.NONE;
-			this.currentAxe = Axes.NONE;
+	private void alalyseTouch() {
+		LOG.showInfoLog("Analysing Touch");
+		LOG.showInfoLog(this.currentAxe.toString());
+		if(isSlide() && !isAxeLocked){
+			LOG.showInfoLog("Looking for Axe");
+			this.currentAxe = this.findAxe();
+			this.lockAxe(true);
 		}
+		
+		if(findSide()){
+			this.game.setCellsInAction(currentAxe, side, curr_x_point, curr_y_point);
+		}
+		
+	}
+	
+	private boolean findSide() {
+		LOG.showInfoLog("Looking for side");
+		if(this.currentAxe.equals(Axes.HORISONT)){
+			if(last_x_point > curr_x_point){
+				this.side = MoveDirection.LEFT;
+				LOG.showInfoLog("Side is : LEFT");
+				return true;
+			}else if(last_x_point < curr_x_point){
+				this.side = MoveDirection.RIGHT;
+				LOG.showInfoLog("Side is : RIGHT");
+				return true;
+			}else{
+				LOG.showInfoLog("Horisontal side can't be detected");
+				return false;
+			}
+		}else {
+			if(last_y_point > curr_y_point){
+				this.side = MoveDirection.UP;
+				LOG.showInfoLog("Side is : UP");
+				return true;
+			}else if(last_y_point < curr_y_point){
+				this.side = MoveDirection.DOWN;
+				LOG.showInfoLog("Side is : DOWN");
+				return true;
+			}else{
+				LOG.showInfoLog("Vertical side can't be detected");
+				return false;
+			}
+		}
+	}
+
+	private void lockAxe(boolean b){
+		this.isAxeLocked = b;
+	}
+	
+
+	private Axes findAxe() {
+		if(this.last_x_point != this.curr_x_point){
+			return Axes.HORISONT;
+		}else {
+			return Axes.VERTICAL;	
+		}
+	}
+
+	private boolean isSlide() {
+		if(this.last_x_point != this.curr_x_point || this.last_y_point != this.curr_y_point){
+			return true;
+		}
+		return false;
 	}
 
 	private void updatePoint(MotionEvent event) {
 		this.last_x_point = this.curr_x_point;
 		this.last_y_point = this.curr_y_point;
-		this.findPoint(event);
 	}
 
 	private void setListen(boolean state) {

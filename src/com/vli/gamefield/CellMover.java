@@ -36,6 +36,11 @@ public class CellMover implements CellMoverBehavior{
 				break;
 			}
 		}
+		this.ajastPosition(cells);
+	}
+
+	private void ajastPosition(List<Cell> cells) {
+		
 	}
 
 	private int getOffset(Axes axe, MoveDirection side) {

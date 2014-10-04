@@ -8,80 +8,76 @@ import com.vli.utils.LOG;
 public class Map {
 	
 	private CellBehavior[][] cells;
+	private int nbOfLines;
+	private int nbOfRows;
 	
 	public Map(){
 		
 	}
 	
 	public void intitMap(int nbRows, int nbLines){
-		this.cells = new CellBehavior[nbLines][nbRows];		
+		this.cells = new CellBehavior[nbLines][nbRows];	
+		this.nbOfLines = nbLines;
+		this.nbOfRows = nbRows;
 	}
 	
 	public void addCell(int xPos, int yPos, CellBehavior cell){
 		this.cells[yPos][xPos] = cell;
 	}
 	
-	public List<Cell> getCellsAround(int curr_x_point, int curr_y_point, Axes currentAxe){
-		int nb;
-		List<Cell> cellsToReturn = new LinkedList<Cell>();
-		if(currentAxe.equals(Axes.HORISONT)){
-			nb = this.getLineNb(curr_y_point);
-			for(int i = 0; i < 8; i++){
-				try {
-					cellsToReturn.add((Cell) cells[nb-1][i]);
-				} catch (Exception e) {
-					e.printStackTrace();
-					LOG.showInfoLog("horisont");
-					LOG.showInfoLog(nb-1);
-					LOG.showInfoLog(i);
-				}				
-			}
+	public List<Cell> getCellsAround(int x_point, int y_point, Axes axe){
+		List findedCells = new LinkedList<Cell>();
+		
+		int[] coordinates = findID(y_point, x_point); 
+		
+		if(axe.equals(Axes.HORISONT)){
+			getLineByID(coordinates);
 		}else {
-			nb = this.getRowNb(curr_x_point);
-			for(int i = 0; i < 10; i++){
-				try {
-					cellsToReturn.add((Cell) cells[i][nb-1]);
-				} catch (Exception e) {
-					e.printStackTrace();
-					LOG.showInfoLog("vertic");
-					LOG.showInfoLog(i);
-					LOG.showInfoLog(nb-1);
+			getRowByID(coordinates);
+		}
+		
+		return findedCells;
+	}
+	
+	
+	private int[] findID(int y_point, int x_point) {
+		// int [] coord = new int[2]{lineID, rowID}
+		LOG.showInfoLog("Looking for coordinates");
+		for(int y = 0; y < nbOfLines; y++){
+			for(int x = 0; x < nbOfRows; x++){
+				Cell c = (Cell) cells[y][x];
+				if(y_point > c.getBounds().top && y_point < c.getBounds().bottom){
+					if(x_point > c.getBounds().left && x_point < c.getBounds().right){
+						LOG.showInfoLog("Coordinates are finding");
+						return new int[]{c.getLineNb(), c.getRowNb()};	// иногда возвращает ноль -- возможно из за маржинов
+					}
 				}
 			}
 		}
-		return cellsToReturn;
+		return null;
 	}
 
-	private int getRowNb(int point) {
-		for(int i = 0; i < 10; i++){
+	private List<Cell> getLineByID(int[] coordinates){
+		LOG.showInfoLog("Looking for Line ID");
+		List<Cell> tmpfindedCells = new LinkedList<Cell>();
+		for(int i=0;i<nbOfRows;i++){
 			try {
-				Cell c = (Cell) cells[1][i];
-				int left = c.getBounds().left;
-				int right = c.getBounds().right;
-				if(point > left && point < right){
-					return c.getRowNb();
-				}
+				tmpfindedCells.add((Cell) cells[coordinates[0]][i]);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
 		}
-		return 0;
+		return tmpfindedCells;
 	}
-
-	private int getLineNb(int point) {
-		for(int i = 0; i < 8; i++){
-			try {
-				Cell c = (Cell) cells[i][0];
-				int top = c.getBounds().top;
-				int bot = c.getBounds().bottom;
-				if(point < bot && point > top){
-					return c.getLineNb();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	
+	private List<Cell> getRowByID(int[] coordinates){
+		LOG.showInfoLog("Looking for Row ID");
+		List findedCells = new LinkedList<Cell>();
+		for(int i=0;i<nbOfLines;i++){
+			findedCells.add(cells[i][coordinates[1]]);
 		}
-		return 0;
+		return findedCells;
 	}
 	
 }
