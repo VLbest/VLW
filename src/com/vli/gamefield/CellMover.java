@@ -16,6 +16,7 @@ public class CellMover implements CellMoverBehavior{
 
 	@Override
 	public void moveCells(List<Cell> cells, MoveDirection side, Axes axe) {
+		LOG.showInfoLog("MOVING");
 		int offset = 3;
 		for(Cell cell: cells){
 			switch (side) {
