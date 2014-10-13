@@ -6,5 +6,5 @@ import android.graphics.Path.Direction;
 
 public interface CellMoverBehavior {
 	
-	public void moveCells(List<Cell> cells, MoveDirection side, Axes currentAxe);
+	public boolean moveCells(List<Cell> cells, MoveDirection side, Axes currentAxe);
 }

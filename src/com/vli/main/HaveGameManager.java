@@ -4,6 +4,7 @@ import com.vli.conf.Configurable;
 import com.vli.gamefield.Axes;
 import com.vli.gamefield.MoveDirection;
 import com.vli.gamefield.TileListenner;
+import com.vli.gamefield.TileListennerBehavior;
 
 public interface HaveGameManager {
 

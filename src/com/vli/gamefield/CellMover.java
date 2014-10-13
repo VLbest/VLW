@@ -15,9 +15,8 @@ public class CellMover implements CellMoverBehavior{
 	}
 
 	@Override
-	public void moveCells(List<Cell> cells, MoveDirection side, Axes axe) {
-		LOG.showInfoLog("MOVING");
-		int offset = 3;
+	public boolean moveCells(List<Cell> cells, MoveDirection side, Axes axe) {
+		int offset = 50;
 		for(Cell cell: cells){
 			switch (side) {
 			case UP:
@@ -37,7 +36,11 @@ public class CellMover implements CellMoverBehavior{
 				break;
 			}
 		}
-		this.ajastPosition(cells);
+		return true;
+	}
+	
+	public void moveCellsToOneStep(List<Cell> cells, MoveDirection side, Axes axe) {
+		
 	}
 
 	private void ajastPosition(List<Cell> cells) {
